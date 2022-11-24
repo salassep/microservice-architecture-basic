@@ -1,0 +1,30 @@
+# Set version of docker compose
+version: '3.7'
+
+# Set services
+services:
+  # Set item-app service
+  item-app:
+    # Get item-app with version v1 image from github packages
+    image: ghcr.io/salassep/item-app:v1
+    # Set port mapping
+    ports:
+     - 80:8080
+    # Set restart policy to always restart when the container stops
+    restart: always
+    # Service item-app will run after the service item-db has successfully started
+    depends_on:
+      - item-db
+  # Set item-db service
+  item-db:
+    # Get mongodb image with version 3 from docker hub
+    image: mongo:3
+    # Set restart policy to always restart when the container stops
+    restart: always
+    # Use the app-db volume with the target /data/db on the container
+    volumes:
+      - app-db:/data/db
+
+# Create app-db volume
+volumes:
+  app-db:
