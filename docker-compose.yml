@@ -25,6 +25,7 @@ services:
     volumes:
       - app-db:/data/db
 
-# Create app-db volume
+# Set volumes
 volumes:
+  # Create volume named app-db
   app-db:
