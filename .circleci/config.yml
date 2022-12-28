@@ -20,10 +20,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install GCC Compiler
+          name: Install GCC Compiler using cimg/base
           command: sudo apt-get install build-essential
       - run:
-          name: Run Test App
+          name: Run Test App using golang
           command: go test -v -short --count=1 $(go list ./...)
   build-app-karsajobs:
     executor: docker
