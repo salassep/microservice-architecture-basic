@@ -18,6 +18,7 @@ jobs:
       - image: golang:1.15-alpine
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Run Test App
           command: go test -v -short --count=1 $(go list ./...)
