@@ -16,12 +16,14 @@ jobs:
   test-app:
     docker:
       - image: cimg/base:2022.12
-      - image: circleci/golang:1.15
+      - image: cimg/go:1.15
     steps:
       - checkout
       - run:
           name: Install GCC Compiler using cimg/base
-          command: sudo apt-get install build-essential
+          command: |
+            go version
+            sudo apt-get install build-essential
       - run:
           name: Run Test App using golang
           command: go test -v -short --count=1 $(go list ./...)
