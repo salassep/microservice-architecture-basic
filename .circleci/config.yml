@@ -20,7 +20,7 @@ jobs:
       - checkout
       - run:
           name: Install GCC Compiler
-          command: apt-get install build-essential
+          command: sudo apt-get install build-essential
       - run:
           name: Run Test App
           command: go test -v -short --count=1 $(go list ./...)
