@@ -1,0 +1,36 @@
+version: 2.1
+
+executors:
+  docker:
+    docker:
+      - image: docker:stable
+jobs:
+  lint-dockerfile:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Linting Dockerfile
+          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
+  test-app:
+    docker:
+      - image: golang:1.15-alpine
+    steps:
+      - run:
+          name: Run Test App
+          command: go test -v -short --count=1 $(go list ./...)
+  build-app-karsajobs:
+    executor: docker
+    steps:
+      - run:
+          name: Build and Push Image
+          command: sh build_push_image_karsajobs.sh
+
+workflows:
+  version: 2
+  karsajob-workflow:
+    jobs:
+      - lint-dockerfile
+      - test-app
+      - build-app-karsajobs
