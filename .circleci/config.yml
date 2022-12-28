@@ -16,6 +16,7 @@ jobs:
   test-app:
     docker:
       - image: cimg/base:2022.12
+      - image: golang:1.15-alpine
     steps:
       - checkout
       - run:
