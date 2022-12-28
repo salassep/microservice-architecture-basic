@@ -15,15 +15,9 @@ jobs:
           command: docker run --rm --interactive hadolint/hadolint < Dockerfile
   test-app:
     docker:
-      - image: cimg/base:2022.12
       - image: cimg/go:1.15
     steps:
       - checkout
-      - run:
-          name: Install GCC Compiler using cimg/base
-          command: |
-            go version
-            sudo apt-get install build-essential
       - run:
           name: Run Test App using golang
           command: go test -v -short --count=1 $(go list ./...)
