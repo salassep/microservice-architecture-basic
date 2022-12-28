@@ -1,0 +1,91 @@
+# Define the version of the Kubernetes API
+apiVersion: apps/v1
+# Define the StatefulSet object
+kind: StatefulSet
+# Additional information about the object
+metadata:
+  # The object name
+  name: karsajobs-statefulset
+  # Label with the key 'app' and the value 'karsajobs-statefulset'
+  labels:
+    app: karsajobs-statefulset
+# Object configuration
+spec:
+  # Name of the service
+  serviceName: karsajobs-db
+  # The number of replicas of the pod
+  replicas: 1
+  # Selector to identify object with the key 'app' and the value 'karsajobs-db'
+  selector:
+    matchLabels:
+      app: karsajobs-db
+  # Set the number of seconds for the pods should be ready
+  minReadySeconds: 10
+  # Template for creating object
+  template:
+    # Additional information of the object
+    metadata:
+      # Label with the key 'app' and the value 'karsajobs-db'
+      labels:
+        app: karsajobs-db
+    # Object configuration
+    spec:
+      # Set grace period of 10 seconds when the pod being terminated
+      terminationGracePeriodSeconds: 10
+      # Define the container to be used in the object 
+      containers:
+          # Container name
+        - name: mongo
+          # Container image using the latest version of mongo
+          image: mongo
+          # Set the environment variables
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_USERNAME                
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+          # Set the volume mount name and path
+          volumeMounts:
+            - name: mongo-creds
+              mountPath: /etc/mongo-credentials
+              readOnly: true
+            - name: mongodb-configmap
+              mountPath: /config
+            - name: mongodb-data
+              mountPath: /data/db
+          # Policy for how and when to pull a container image
+          # Always means always pull the image from the container registry
+          imagePullPolicy: Always
+          # Set the container ports
+          ports:
+            - containerPort: 27017
+      # Set the object volumes
+      volumes:
+          # Volume name
+        - name: mongo-creds
+          # Take the value from Secret object into the mongo-creds volume
+          secret:
+            secretName: mongo-creds
+            items:
+              - key: MONGO_ROOT_USERNAME
+                path: MONGO_ROOT_USERNAME
+                mode: 0444
+              - key: MONGO_ROOT_PASSWORD
+                path: MONGO_ROOT_PASSWORD
+                mode: 0444
+          # Volume name
+        - name: mongodb-configmap
+          # Take the value from ConfigMap object into the mongo-configmap volume
+          configMap:
+            name: mongo-configmap
+            items:
+              - key: mongo.conf
+                path: mongo.conf
+          # Volume name
+        - name: mongodb-data
+          # Take persistent volume using pvc or PersistentVolumeClaim
+          persistentVolumeClaim:
+            # pvc name
+            claimName: mongo-pv-claim
+          
+    

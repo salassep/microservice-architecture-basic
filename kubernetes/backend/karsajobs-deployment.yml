@@ -1,0 +1,56 @@
+# Define the version of the Kubernetes API
+apiVersion: apps/v1
+# Define the Deployment object
+kind: Deployment
+# Additional information about the object
+metadata:
+  # The name of object
+  name: karsajobs-be-deployment
+  # Label with the key 'app' and the value 'karsajobs-be'
+  labels:
+    app: karsajobs-be
+# Object configuration
+spec:
+  # The number of replicas of the pod
+  replicas: 1
+  # Selector to indentify objects with the key 'app' and the value 'karsajobs-be'
+  selector:
+    matchLabels:
+      app: karsajobs-be
+  # Template for creating object
+  template:
+    # Additional information about the object
+    metadata:
+     # Label with the key 'app' and the value 'karsajobs-be'
+      labels:
+        app: karsajobs-be
+    # Object configuration
+    spec:
+      # Define the container to be used in the object
+      containers:
+          # Container name
+        - name: karsajobs-be
+          # The container image to be used
+          image: ghcr.io/salassep/karsajobs:latest
+          # Policy for how and when to pull a container image
+          # Always means always pull the image from the container registry
+          imagePullPolicy: Always
+          # Set environment variables
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: MONGO_HOST
+              value: mongo
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: MONGO_ROOT_PASSWORD
+          # Set container port
+          ports:
+          - containerPort: 8080

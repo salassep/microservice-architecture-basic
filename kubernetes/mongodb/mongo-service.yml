@@ -1,0 +1,21 @@
+# Define the version of the Kubernetes API
+apiVersion: v1
+# Define the service object
+kind: Service
+# Addition information about the object
+metadata:
+  # The object name
+  name: mongo
+  # Label with the key 'app' and the value 'karsajobs'
+  labels:
+    app: karsajobs
+# Object configuration
+spec:
+  ports:
+    # The port number of the service
+    - port: 27017
+  # Selector to indentify objects with the key 'app' and the value 'karsajobs-db'
+  selector:
+    app: karsajobs-db
+  # Set ClusterIP to None, so the service doesnt have cluster-internal IP
+  clusterIP: None

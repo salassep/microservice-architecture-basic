@@ -1,0 +1,46 @@
+# Define the version of the Kubernetes API
+apiVersion: v1
+# Define the PersistenVolume object
+kind: PersistentVolume
+# Additional information about the object
+metadata:
+  # The object name
+  name: mongo-pv
+  # Label with the key 'type' and the value 'local'
+  labels:
+    type: local
+# Object configuration
+spec:
+  # Define the volume capacity to be 2Gi
+  capacity:
+    storage: 2Gi
+  # Set the access mode
+  accessModes:
+    - ReadWriteOnce
+  # Set the hostpath
+  hostPath:
+    path: "/data/mongo"
+---
+# Define the version of the Kubernetes API
+apiVersion: v1
+# Define the PersistentVolumeClaim object
+kind: PersistentVolumeClaim
+# Additional information about the object
+metadata:
+  # The object name
+  name: mongo-pv-claim
+  # Label with the key 'app' and the value 'karsajobs'
+  labels:
+    app: karsajobs
+# Object configuration
+spec:
+  # Set the access mode
+  accessModes:
+    - ReadWriteOnce
+  # Set volume mode to be filesystem
+  volumeMode: Filesystem
+  # Define the resouce requirement and limit for the pods
+  resources:
+    # Request the storage of 1Gi from the PersistentVolume
+    requests:
+      storage: 1Gi

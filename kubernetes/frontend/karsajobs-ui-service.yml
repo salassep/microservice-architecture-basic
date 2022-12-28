@@ -1,0 +1,22 @@
+# Define the version of the Kubernetes API
+apiVersion: v1
+# Define the service object
+kind: Service
+# Additional information about the object
+metadata:
+  # Label with thee key 'app' and the value 'karsajobs-fe'
+  labels: 
+    app: karsajobs-fe
+  # The object name
+  name: karsajobs-fe-service
+# Object configuration
+spec:
+  ports:
+  # The port number of the service
+  - port: 8000
+  # Selector to indentify objects with the key 'app' and the value 'karsajobs-fe'
+  selector:
+    app: karsajobs-fe
+  # Expose pods to external traffic using NodePort
+  # NodePort is exposes a specific port on each node in the cluster
+  type: NodePort
